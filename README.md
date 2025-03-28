@@ -6,6 +6,7 @@
 - [Key Steps](#key-steps)
 - [Technologies](#technologies)
 - [Getting Started](#getting-started)
+- [Run Instructions](#run-instructions)
 - [Watch the Video Tutorial](#watch-the-video-tutorial)
 
 ## Introduction
@@ -44,3 +45,44 @@ The project is designed with the following components:
 - Cassandra
 - PostgreSQL
 - Docker
+
+## Run Instructions
+
+### Step 1: Start Docker Compose
+
+Run the following command to start the entire data engineering stack:
+
+```bash
+docker-compose up -d
+```
+
+### Step 2: Copy the Spark Streaming Script
+
+After the containers are up and running, copy the `spark_stream.py` file into the Spark master container:
+
+```bash
+docker cp spark_stream.py data-engineering-spark-master-1:/tmp/
+```
+
+### Step 3: Execute the Spark Streaming Job
+
+Access the Spark master container:
+
+```bash
+docker exec -it data-engineering-spark-master-1 bash
+```
+
+Inside the container, run the following command to execute the Spark streaming job:
+
+```bash
+spark-submit \
+  --master spark://data-engineering-spark-master-1:7077 \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,com.datastax.spark:spark-cassandra-connector_2.12:3.4.1 \
+  --conf spark.cassandra.connection.host=cassandra \
+  --conf spark.cassandra.connection.port=9042 \
+  --conf spark.sql.extensions=com.datastax.spark.connector.CassandraSparkExtensions \
+  --conf spark.kafka.bootstrap.servers=broker:9092 \
+  --conf spark.driver.host=data-engineering-spark-master-1 \
+  --conf spark.driver.bindAddress=0.0.0.0 \
+  /tmp/spark_stream.py
+```
