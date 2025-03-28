@@ -26,6 +26,19 @@ The project is designed with the following components:
 - **Apache Spark**: For data processing with its master and worker nodes.
 - **Cassandra**: Where the processed data will be stored.
 
+## Cassandra Database
+
+Below is a screenshot of the Cassandra database showing the stored streaming data:
+
+![Cassandra Database](Cassandra.png)
+
+## Docker Setup
+
+Here is a screenshot of the running Docker containers:
+
+![Docker Setup](Docker.png)
+
+
 ## Key Steps
 
 - Setting up a data pipeline with Apache Airflow
